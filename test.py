@@ -6,27 +6,26 @@ letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 
 distribution_letters = [letter for ls in [[letter] * count for (letter, count) in zip(letters, distribution)] for letter in ls]
 
+
 def random_letter():
     return distribution_letters[random.randrange(len(distribution_letters))]
 
 
-def print_grid(grid, dimensions):
-    width = dimensions[0]
+def print_grid(grid, width):
     for i in range(len(grid)):
         print(grid[i], end='')
         if i % width == width - 1:
             print()
 
 
-def word_from_grid(grid, code, dimensions):
-    width = dimensions[0]
-
+def letter_indices(code, width):
     column = int(code[0])
     row = int(code[1])
     moves = [int(move) for move in code[2:]]
 
     index = row * width + column
-    letters = [grid[index]]
+
+    indices = [index]
 
     for move in moves:
         if move == 4:
@@ -45,17 +44,49 @@ def word_from_grid(grid, code, dimensions):
             index += width - 1
         elif move == 3:
             index += width + 1
-        letters.append(grid[index])
+        indices.append(index)
 
-    return ''.join(letters)
+    return indices
+
+
+def move_grid(grid, indices, width, height):
+    # find blanks
+    for index in indices:
+        grid[index] = '_'
+
+    # drop letters to bottom of column
+    columns = [grid[i::width] for i in range(width)]
+
+    new_columns = []
+    for column in columns:
+        filtered_column = list(filter(lambda l: l is not '_', column))
+        filtered_column_length = len(filtered_column)
+        new_column = [random_letter() for _ in range(height - filtered_column_length)]
+        new_column.extend(filtered_column)
+        new_columns.append(new_column)
+
+    print(columns)
+    print(new_columns)
+
+    new_grid = []
+    for j in range(height):
+        for i in range(width):
+            new_grid.append(new_columns[i][j])
+
+    return new_grid
 
 
 dimensions = (6, 7)
 grid = [random_letter() for i in range(dimensions[0] * dimensions[1])]
 
 while True:
-    print_grid(grid, dimensions)
+    print_grid(grid, dimensions[0])
 
     raw_code = input('Enter "word": ')
     code = [c for c in raw_code]
-    print(word_from_grid(grid, code, dimensions))
+    indices = letter_indices(code, dimensions[0])
+    word = "".join([grid[index] for index in indices])
+
+    print(f'\n\nYou entered: {word}\n\n')
+
+    grid = move_grid(grid, indices, dimensions[0], dimensions[1])
