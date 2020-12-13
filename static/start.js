@@ -27,6 +27,7 @@ $(document).ready(function () {
         $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
       }
     }
+    $('.gridSquare').click(clickSquare())
   }
 
   columns = [];
@@ -38,40 +39,41 @@ $(document).ready(function () {
     columns.push(column);
   }
 
-  console.log(columns);
   drawGrid(columns);
 
   var word = "";
   var selectedSquares = [];
 
-  $('.gridSquare').click(function () {
-    let element = $(this);
+  function clickSquare() {
+    return function () {
+      let element = $(this);
 
-    if (element.hasClass('clicked')) {
-      let lastSelectedSquare = selectedSquares.pop();
-      if (element.attr('id') !== lastSelectedSquare.attr('id')) {
-        resetWord()
-      } else {
-        removeLetterFromWord()
-        element.removeClass('clicked');
-      }
-    } else {
-      let previousSelectedSquare = selectedSquares.pop();
-
-      if (previousSelectedSquare) {
-        let previousRow = previousSelectedSquare.attr('data-row');
-        let previousColumn = previousSelectedSquare.attr('data-column');
-        let row = element.attr('data-row');
-        let column = element.attr('data-column');
-        if (Math.max(Math.abs(previousRow - row), Math.abs(previousColumn - column)) > 1) {
-          resetWord();
+      if (element.hasClass('clicked')) {
+        let lastSelectedSquare = selectedSquares.pop();
+        if (element.attr('id') !== lastSelectedSquare.attr('id')) {
+          resetWord()
+        } else {
+          removeLetterFromWord()
+          element.removeClass('clicked');
         }
+      } else {
+        let previousSelectedSquare = selectedSquares.pop();
+
+        if (previousSelectedSquare) {
+          let previousRow = previousSelectedSquare.attr('data-row');
+          let previousColumn = previousSelectedSquare.attr('data-column');
+          let row = element.attr('data-row');
+          let column = element.attr('data-column');
+          if (Math.max(Math.abs(previousRow - row), Math.abs(previousColumn - column)) > 1) {
+            resetWord();
+          }
+        }
+        addLetterToWord(element.text().trim());
+        element.addClass('clicked');
+        selectedSquares.push(previousSelectedSquare, element);
       }
-      addLetterToWord(element.text().trim());
-      element.addClass('clicked');
-      selectedSquares.push(previousSelectedSquare, element);
-    }
-  })
+    };
+  }
 
   $('#submit-word').click(function () {
     let scoreElement = $('#score');
@@ -79,6 +81,7 @@ $(document).ready(function () {
 
     scoreElement.text(currentScore + word.length);
 
+    updateGrid();
     resetWord();
   });
 
@@ -99,5 +102,31 @@ $(document).ready(function () {
     selectedSquares = [];
     $('#current-word').text("");
     $('td').removeClass('clicked');
+  }
+
+  function updateGrid() {
+    for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
+      // find clicked squares in this column
+      let rowIndices = [];
+      selectedSquares.forEach(function (selectedSquare) {
+        if (selectedSquare !== undefined) {
+          let column = selectedSquare.attr('data-column');
+          if (column == columnIndex) {
+            rowIndices.push(selectedSquare.attr('data-row'))
+          }
+        }
+      });
+      if (rowIndices.length !== 0) {
+        let reversedRowIndices = rowIndices.sort().reverse();
+        rowIndices.forEach(function (rowIndex) {
+          columns[columnIndex].splice(rowIndex, 1)
+        })
+        for (let i = 0; i < rowIndices.length; i++) {
+          columns[columnIndex].unshift(randomLetter());
+        }
+      }
+    }
+    drawGrid(columns);
+    resetWord();
   }
 });
