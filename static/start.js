@@ -21,7 +21,7 @@ $(document).ready(function () {
   for (var row = 0; row < DIMENSION; row++) {
     $('#grid').append('<tr></tr>');
     for (var column = 0; column < DIMENSION; column++) {
-      $('#grid tr:last').append("<td class='gridSquare' id='g"+ row + "#" + column + "' data-row='" + row + "' data-column='" + column + "'>" + randomLetter() + "</td>")
+      $('#grid tr:last').append("<td class='gridSquare' id='g" + row + "#" + column + "' data-row='" + row + "' data-column='" + column + "'>" + randomLetter() + "</td>")
     }
   }
 
@@ -40,9 +40,20 @@ $(document).ready(function () {
         element.removeClass('clicked');
       }
     } else {
+      let previousSelectedSquare = selectedSquares.pop();
+
+      if (previousSelectedSquare) {
+        let previousRow = previousSelectedSquare.attr('data-row');
+        let previousColumn = previousSelectedSquare.attr('data-column');
+        let row = element.attr('data-row');
+        let column = element.attr('data-column');
+        if (Math.max(Math.abs(previousRow - row), Math.abs(previousColumn - column)) > 1) {
+          resetWord();
+        }
+      }
       addLetterToWord(element.text().trim());
       element.addClass('clicked');
-      selectedSquares.push(element);
+      selectedSquares.push(previousSelectedSquare, element);
     }
   })
 
