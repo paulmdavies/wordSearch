@@ -40,7 +40,15 @@ $(document).ready(function () {
         $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
       }
     }
-    $('.gridSquare').click(clickSquare())
+    // $('.gridSquare').click(clickSquare())
+    $('.gridSquare').mousedown(event => clickSquare($(event.target)));
+    $('.gridSquare').mouseenter(event => {
+      if (event.buttons === 1) {
+        let target = $(event.target);
+        clickSquare(target)
+      }
+    })
+    $('.gridSquare').mouseup(submitWord)
   }
 
   columns = [];
@@ -57,38 +65,34 @@ $(document).ready(function () {
   var word = "";
   var selectedSquares = [];
 
-  function clickSquare() {
-    return function () {
-      let element = $(this);
-
-      if (element.hasClass('clicked')) {
-        let lastSelectedSquare = selectedSquares.pop();
-        if (element.attr('id') !== lastSelectedSquare.attr('id')) {
-          resetWord()
-        } else {
-          removeLetterFromWord()
-          element.removeClass('clicked');
-        }
+  function clickSquare(element) {
+    if (element.hasClass('clicked')) {
+      let lastSelectedSquare = selectedSquares.pop();
+      if (element.attr('id') !== lastSelectedSquare.attr('id')) {
+        resetWord()
       } else {
-        let previousSelectedSquare = selectedSquares.pop();
-
-        if (previousSelectedSquare) {
-          let previousRow = previousSelectedSquare.attr('data-row');
-          let previousColumn = previousSelectedSquare.attr('data-column');
-          let row = element.attr('data-row');
-          let column = element.attr('data-column');
-          if (Math.max(Math.abs(previousRow - row), Math.abs(previousColumn - column)) > 1) {
-            resetWord();
-          }
-        }
-        addLetterToWord(element.text().trim());
-        element.addClass('clicked');
-        selectedSquares.push(previousSelectedSquare, element);
+        removeLetterFromWord()
+        element.removeClass('clicked');
       }
-    };
+    } else {
+      let previousSelectedSquare = selectedSquares.pop();
+
+      if (previousSelectedSquare) {
+        let previousRow = previousSelectedSquare.attr('data-row');
+        let previousColumn = previousSelectedSquare.attr('data-column');
+        let row = element.attr('data-row');
+        let column = element.attr('data-column');
+        if (Math.max(Math.abs(previousRow - row), Math.abs(previousColumn - column)) > 1) {
+          resetWord();
+        }
+      }
+      addLetterToWord(element.text().trim());
+      element.addClass('clicked');
+      selectedSquares.push(previousSelectedSquare, element);
+    }
   }
 
-  $('#submit-word').click(function () {
+  function submitWord() {
     if (validWords.includes(word.toLowerCase())) {
       let scoreElement = $('#score');
       let currentScore = parseInt(scoreElement.text());
@@ -98,6 +102,10 @@ $(document).ready(function () {
       updateGrid();
     }
     resetWord();
+  }
+
+  $('#submit-word').click(function () {
+    submitWord();
   });
 
   function addLetterToWord(letter) {
