@@ -57,6 +57,15 @@ $(document).ready(function () {
     }
   })
 
+  $('#submit-word').click(function () {
+    let scoreElement = $('#score');
+    let currentScore = parseInt(scoreElement.text());
+
+    scoreElement.text(currentScore + word.length);
+
+    resetWord();
+  });
+
   function addLetterToWord(letter) {
     word += letter;
 
