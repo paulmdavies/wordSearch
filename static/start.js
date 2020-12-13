@@ -1,4 +1,17 @@
 $(document).ready(function () {
+  let validWords = [];
+  fetch("https://raw.githubusercontent.com/marcoagpinto/aoo-mozilla-en-dict/master/en_GB%20(Marco%20Pinto)/en-GB.dic")
+    .then(response => response.text())
+    .then(data => {
+      let allWords = data.split("\n");
+      allWords.forEach(rawWord => {
+        // don't include proper nouns
+        if (rawWord.length > 0 && rawWord[0] !== rawWord[0].toUpperCase()) {
+          validWords.push(rawWord.split('/')[0])
+        }
+      });
+    })
+
   const DIMENSION = 5;
 
   const DISTRIBUTION = [9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1]
@@ -76,12 +89,14 @@ $(document).ready(function () {
   }
 
   $('#submit-word').click(function () {
-    let scoreElement = $('#score');
-    let currentScore = parseInt(scoreElement.text());
+    if (validWords.includes(word.toLowerCase())) {
+      let scoreElement = $('#score');
+      let currentScore = parseInt(scoreElement.text());
 
-    scoreElement.text(currentScore + word.length);
+      scoreElement.text(currentScore + word.length);
 
-    updateGrid();
+      updateGrid();
+    }
     resetWord();
   });
 
