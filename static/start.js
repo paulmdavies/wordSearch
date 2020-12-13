@@ -18,12 +18,28 @@ $(document).ready(function () {
     return DISTRIBUTION_LETTERS[index]
   }
 
-  for (var row = 0; row < DIMENSION; row++) {
-    $('#grid').append('<tr></tr>');
-    for (var column = 0; column < DIMENSION; column++) {
-      $('#grid tr:last').append("<td class='gridSquare' id='g" + row + "#" + column + "' data-row='" + row + "' data-column='" + column + "'>" + randomLetter() + "</td>")
+  function drawGrid(columns) {
+    let grid = $('#grid');
+    grid.empty();
+    for (var rowIndex = 0; rowIndex < DIMENSION; rowIndex++) {
+      grid.append('<tr></tr>');
+      for (var columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
+        $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
+      }
     }
   }
+
+  columns = [];
+  for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
+    column = [];
+    for (let rowIndex = 0; rowIndex < DIMENSION; rowIndex++) {
+      column.push(randomLetter());
+    }
+    columns.push(column);
+  }
+
+  console.log(columns);
+  drawGrid(columns);
 
   var word = "";
   var selectedSquares = [];
