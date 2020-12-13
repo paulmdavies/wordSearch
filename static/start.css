@@ -13,3 +13,16 @@ td {
 td.clicked {
     background-color: greenyellow;
 }
+
+.row {
+    display: flex;
+}
+
+.column-left {
+    margin-right: 5px;
+}
+
+.column-right {
+    margin-left: 5px;
+    flex: 1;
+}
