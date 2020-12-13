@@ -26,34 +26,41 @@ $(document).ready(function () {
   }
 
   var word = "";
-  var lastClickedId = null;
+  var selectedSquares = [];
 
   $('.gridSquare').click(function () {
     let element = $(this);
-    updateWord(element);
 
     if (element.hasClass('clicked')) {
-      if (element.attr('id') !== lastClickedId) {
+      let lastSelectedSquare = selectedSquares.pop();
+      if (element.attr('id') !== lastSelectedSquare.attr('id')) {
         resetWord()
+      } else {
+        removeLetterFromWord()
+        element.removeClass('clicked');
       }
-      element.removeClass('clicked');
     } else {
+      addLetterToWord(element.text().trim());
       element.addClass('clicked');
-      lastClickedId = element.attr('id');
+      selectedSquares.push(element);
     }
   })
 
-  function updateWord(element) {
-    let letter = element.text().trim();
-
+  function addLetterToWord(letter) {
     word += letter;
+
+    $('#current-word').text(word);
+  }
+
+  function removeLetterFromWord() {
+    word = word.slice(0, -1);
 
     $('#current-word').text(word);
   }
 
   function resetWord() {
     word = "";
-    wordSquares = [];
+    selectedSquares = [];
     $('#current-word').text("");
     $('td').removeClass('clicked');
   }
