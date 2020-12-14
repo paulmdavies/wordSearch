@@ -43,7 +43,6 @@ $(document).ready(function () {
         $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
       }
     }
-    // $('.gridSquare').click(clickSquare())
     $('.gridSquare').mousedown(event => {
       if (event.buttons === 1) {
         let target = $(event.target);
@@ -111,10 +110,6 @@ $(document).ready(function () {
     }
     resetWord();
   }
-
-  $('#submit-word').click(function () {
-    submitWord();
-  });
 
   function addLetterToWord(letter) {
     word += letter;
