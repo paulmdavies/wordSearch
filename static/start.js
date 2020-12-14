@@ -7,7 +7,10 @@ $(document).ready(function () {
       allWords.forEach(rawWord => {
         // don't include proper nouns
         if (rawWord.length > 0 && rawWord[0] !== rawWord[0].toUpperCase()) {
-          validWords.push(rawWord.split('/')[0])
+          let sanitisedWord = rawWord.split('/')[0];
+          if (sanitisedWord.length >= 3) {
+            validWords.push(sanitisedWord)
+          }
         }
       });
     })
