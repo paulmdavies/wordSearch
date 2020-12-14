@@ -34,6 +34,29 @@ $(document).ready(function () {
     return DISTRIBUTION_LETTERS[index]
   }
 
+  function goodMoveEvent(event) {
+    let target = $(event.target);
+    let targetLeft = target.offset().left;
+    let targetTop = target.offset().top;
+    let eventLeft = event.pageX;
+    let eventTop = event.pageY;
+
+    let targetWidth = target.width();
+    let targetHeight = target.height();
+
+    let halfTargetWidth = targetWidth / 2;
+    let halfTargetHeight = targetHeight / 2;
+    let targetXCentre = targetLeft + halfTargetWidth;
+    let targetYCentre = targetTop + halfTargetHeight;
+
+    let targetXLower = targetXCentre - (halfTargetWidth * 0.8)
+    let targetXUpper = targetXCentre + (halfTargetWidth * 0.8)
+    let targetYLower = targetYCentre - (halfTargetHeight * 0.8)
+    let targetYUpper = targetYCentre + (halfTargetHeight * 0.8)
+
+    return ((eventLeft >= targetXLower && eventLeft <= targetXUpper) && (eventTop >= targetYLower && eventTop <= targetYUpper))
+  }
+
   function drawGrid(columns) {
     let grid = $('#grid');
     grid.empty();
@@ -49,10 +72,14 @@ $(document).ready(function () {
         clickSquare(target)
       }
     })
-    $('.gridSquare').mouseenter(event => {
+    $('.gridSquare').mousemove(event => {
       if (event.buttons === 1) {
         let target = $(event.target);
-        clickSquare(target)
+
+        let targetId = target.attr('id');
+        if (targetId !== selectedSquares[selectedSquares.length - 1].attr('id') && goodMoveEvent(event)) {
+          clickSquare(target)
+        }
       }
     })
     $('.gridSquare').mouseup(submitWord)
