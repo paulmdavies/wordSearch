@@ -44,7 +44,12 @@ $(document).ready(function () {
       }
     }
     // $('.gridSquare').click(clickSquare())
-    $('.gridSquare').mousedown(event => clickSquare($(event.target)));
+    $('.gridSquare').mousedown(event => {
+      if (event.buttons === 1) {
+        let target = $(event.target);
+        clickSquare(target)
+      }
+    })
     $('.gridSquare').mouseenter(event => {
       if (event.buttons === 1) {
         let target = $(event.target);
