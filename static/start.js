@@ -130,8 +130,6 @@ $(document).ready(function () {
   }
 
   function drag(event) {
-    console.log("MOVE")
-    console.log(event)
     let target = $(event.target);
 
     let targetId = target.attr('id');
