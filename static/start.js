@@ -83,6 +83,41 @@ $(document).ready(function () {
     return ((eventLeft >= targetXLower && eventLeft <= targetXUpper) && (eventTop >= targetYLower && eventTop <= targetYUpper))
   }
 
+  function press(event) {
+    if (!timerStarted) {
+      $('#timer').countdown(
+        new Date().getTime() + (1000 * GAME_SECONDS),
+        function (event) {
+          $('#timer').text(event.strftime('%M:%S'))
+          if (event.type === 'finish') {
+            resetWord();
+            $('.gridSquare').off('mousedown mouseup mousemove')
+            if (highScore === undefined || currentScore > parseInt(highScore)) {
+              console.log("New high score: " + parseInt(currentScore))
+              $('#highscore').text(currentScore);
+              Cookies.set('highscore', currentScore)
+            }
+          }
+        }
+      )
+      timerStarted = true;
+    }
+    let target = $(event.target);
+    clickSquare(target)
+  }
+
+  function drag(event) {
+    console.log("MOVE")
+    console.log(event)
+    let target = $(event.target);
+
+    let targetId = target.attr('id');
+    let previousSquare = selectedSquares[selectedSquares.length - 1];
+    if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(event)) {
+      clickSquare(target)
+    }
+  }
+
   function drawGrid(columns) {
     let grid = $('#grid');
     grid.empty();
@@ -92,42 +127,9 @@ $(document).ready(function () {
         $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
       }
     }
-    $('.gridSquare').mousedown(event => {
-      if (event.buttons === 1) {
-        if (!timerStarted) {
-          $('#timer').countdown(
-            new Date().getTime() + (1000 * 60 * 2),
-            function (event) {
-              $('#timer').text(event.strftime('%M:%S'))
-              if (event.type === 'finish') {
-                resetWord();
-                $('.gridSquare').off('mousedown mouseup mousemove')
-                if (highScore === undefined || currentScore > parseInt(highScore)) {
-                  console.log("New high score: " + parseInt(currentScore))
-                  $('#highscore').text(currentScore);
-                  Cookies.set('highscore', currentScore)
-                }
-              }
-            }
-          )
-          timerStarted = true;
-        }
-        let target = $(event.target);
-        clickSquare(target)
-      }
-    })
-    $('.gridSquare').mousemove(event => {
-      if (event.buttons === 1) {
-        let target = $(event.target);
-
-        let targetId = target.attr('id');
-        let previousSquare = selectedSquares[selectedSquares.length - 1];
-        if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(event)) {
-          clickSquare(target)
-        }
-      }
-    })
-    $('.gridSquare').mouseup(submitWord)
+    $('.gridSquare').on('mousedown touchstart', press)
+    $('.gridSquare').on('mousemove touchmove', drag)
+    $('.gridSquare').on('mouseup touchend', submitWord)
   }
 
   columns = [];
