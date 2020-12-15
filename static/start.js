@@ -142,7 +142,7 @@ $(document).ready(function () {
   function drawGrid(columns) {
     let grid = $('#grid');
     grid.empty();
-    for (var rowIndex = 0; rowIndex < DIMENSION; rowIndex++) {
+    for (var rowIndex = DIMENSION - 1; rowIndex >= 0; rowIndex--) {
       grid.append('<tr></tr>');
       for (var columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
         $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
@@ -243,7 +243,7 @@ $(document).ready(function () {
           columns[columnIndex].splice(rowIndex, 1)
         })
         for (let i = 0; i < rowIndices.length; i++) {
-          columns[columnIndex].unshift(randomLetter());
+          columns[columnIndex].push(randomLetter());
         }
       }
     }
