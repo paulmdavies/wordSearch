@@ -3,14 +3,14 @@ table {
     border: 2px solid black;
 }
 
-td {
+td.gridSquare {
     font-size: 64px;
     border: 2px solid black;
     padding: 4px;
     background-color: palegoldenrod;
 }
 
-td.clicked {
+td.gridSquare.clicked {
     background-color: greenyellow;
 }
 
@@ -20,6 +20,10 @@ td.clicked {
 
 .column-left {
     margin-right: 5px;
+}
+
+.column-centre {
+    margin-left: 5px;
 }
 
 .column-right {

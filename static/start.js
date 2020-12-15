@@ -155,7 +155,10 @@ $(document).ready(function () {
   function submitWord() {
     if (validWords.includes(word.toLowerCase())) {
       let scoreElement = $('#score');
-      currentScore = parseInt(scoreElement.text()) + word.length;
+      let wordScore = word.length;
+      currentScore = parseInt(scoreElement.text()) + wordScore;
+
+      $('#found-words-body').append("<tr><td>" + word + "</td><td>" + wordScore + "</td></tr>")
 
       scoreElement.text(currentScore);
 
