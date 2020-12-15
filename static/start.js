@@ -72,11 +72,15 @@ $(document).ready(function () {
           $('#timer').countdown(
             new Date().getTime() + (1000 * 60 * 2),
             function (event) {
-              console.log(event.type)
               $('#timer').text(event.strftime('%M:%S'))
               if (event.type === 'finish') {
                 resetWord();
                 $('.gridSquare').off('mousedown mouseup mousemove')
+                if (highScore === undefined || currentScore > parseInt(highScore)) {
+                  console.log("New high score: " + parseInt(currentScore))
+                  $('#highscore').text(currentScore);
+                  Cookies.set('highscore', currentScore)
+                }
               }
             }
           )
@@ -114,6 +118,12 @@ $(document).ready(function () {
   var word = "";
   var selectedSquares = [];
   var timerStarted = false;
+  var currentScore = 0;
+  var highScore = Cookies.get('highscore')
+
+  if (highScore !== undefined) {
+    $('#highscore').text(highScore);
+  }
 
   function clickSquare(element) {
     if (element.hasClass('clicked')) {
@@ -145,9 +155,9 @@ $(document).ready(function () {
   function submitWord() {
     if (validWords.includes(word.toLowerCase())) {
       let scoreElement = $('#score');
-      let currentScore = parseInt(scoreElement.text());
+      currentScore = parseInt(scoreElement.text()) + word.length;
 
-      scoreElement.text(currentScore + word.length);
+      scoreElement.text(currentScore);
 
       updateGrid();
     }
