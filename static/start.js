@@ -68,6 +68,20 @@ $(document).ready(function () {
     }
     $('.gridSquare').mousedown(event => {
       if (event.buttons === 1) {
+        if (!timerStarted) {
+          $('#timer').countdown(
+            new Date().getTime() + (1000 * 60 * 2),
+            function (event) {
+              console.log(event.type)
+              $('#timer').text(event.strftime('%M:%S'))
+              if (event.type === 'finish') {
+                resetWord();
+                $('.gridSquare').off('mousedown mouseup mousemove')
+              }
+            }
+          )
+          timerStarted = true;
+        }
         let target = $(event.target);
         clickSquare(target)
       }
@@ -77,7 +91,8 @@ $(document).ready(function () {
         let target = $(event.target);
 
         let targetId = target.attr('id');
-        if (targetId !== selectedSquares[selectedSquares.length - 1].attr('id') && goodMoveEvent(event)) {
+        let previousSquare = selectedSquares[selectedSquares.length - 1];
+        if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(event)) {
           clickSquare(target)
         }
       }
@@ -98,6 +113,7 @@ $(document).ready(function () {
 
   var word = "";
   var selectedSquares = [];
+  var timerStarted = false;
 
   function clickSquare(element) {
     if (element.hasClass('clicked')) {

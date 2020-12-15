@@ -5,7 +5,9 @@
     <title>WordSearch</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='start.css') }}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='countdown.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='start.js') }}"></script>
+
 </head>
 <body>
 <div class="row">
@@ -14,6 +16,7 @@
 
     </div>
     <div class="column-right">
+        <div id="timer">02:00</div>
         <p>Your word is:
         <div id="current-word"></div>
         <p>Your score is:
