@@ -1,26 +1,6 @@
 $(document).ready(function () {
-  const GAME_SECONDS = 150;
-  new Date(GAME_SECONDS);
-  $('#timer').text((GAME_SECONDS / 60 | 0) + ":" + GAME_SECONDS % 60)
-
-  let validWords = [];
-  fetch("https://raw.githubusercontent.com/marcoagpinto/aoo-mozilla-en-dict/master/en_GB%20(Marco%20Pinto)/en-GB.dic")
-    .then(response => response.text())
-    .then(data => {
-      let allWords = data.split("\n");
-      allWords.forEach(rawWord => {
-        // don't include proper nouns
-        if (rawWord.length > 0 && rawWord[0] !== rawWord[0].toUpperCase()) {
-          let sanitisedWord = rawWord.split('/')[0];
-          if (sanitisedWord.length >= 3) {
-            validWords.push(sanitisedWord)
-          }
-        }
-      });
-    })
-
   const DIMENSION = 7;
-
+  const GAME_SECONDS = 150;
   const DISTRIBUTION = [9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1]
   const LETTERS = {
     'A': 1,
@@ -51,12 +31,51 @@ $(document).ready(function () {
     'Z': 10
   }
   const DISTRIBUTION_LETTERS = [];
-
   for (var letter_index = 0; letter_index < Object.keys(LETTERS).length; letter_index++) {
     const letter = Object.keys(LETTERS)[letter_index];
     for (var count = 0; count < DISTRIBUTION[letter_index]; count++) {
       DISTRIBUTION_LETTERS.push(letter)
     }
+  }
+
+  new Date(GAME_SECONDS);
+  $('#timer').text((GAME_SECONDS / 60 | 0) + ":" + GAME_SECONDS % 60)
+
+  let validWords = [];
+  fetch("https://raw.githubusercontent.com/marcoagpinto/aoo-mozilla-en-dict/master/en_GB%20(Marco%20Pinto)/en-GB.dic")
+    .then(response => response.text())
+    .then(data => {
+      let allWords = data.split("\n");
+      allWords.forEach(rawWord => {
+        // don't include proper nouns
+        if (rawWord.length > 0 && rawWord[0] !== rawWord[0].toUpperCase()) {
+          let sanitisedWord = rawWord.split('/')[0];
+          if (sanitisedWord.length >= 3) {
+            validWords.push(sanitisedWord)
+          }
+        }
+      });
+    })
+
+  columns = [];
+  for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
+    column = [];
+    for (let rowIndex = 0; rowIndex < DIMENSION; rowIndex++) {
+      column.push(randomLetter());
+    }
+    columns.push(column);
+  }
+
+  drawGrid(columns);
+
+  var word = "";
+  var selectedSquares = [];
+  var timerStarted = false;
+  var currentScore = 0;
+  var highScore = Cookies.get('highscore')
+
+  if (highScore !== undefined) {
+    $('#highscore').text(highScore);
   }
 
   function randomLetter() {
@@ -134,27 +153,6 @@ $(document).ready(function () {
     $('.gridSquare').on('mousedown touchstart', press)
     $('.gridSquare').on('mousemove touchmove', drag)
     $('.gridSquare').on('mouseup touchend', submitWord)
-  }
-
-  columns = [];
-  for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
-    column = [];
-    for (let rowIndex = 0; rowIndex < DIMENSION; rowIndex++) {
-      column.push(randomLetter());
-    }
-    columns.push(column);
-  }
-
-  drawGrid(columns);
-
-  var word = "";
-  var selectedSquares = [];
-  var timerStarted = false;
-  var currentScore = 0;
-  var highScore = Cookies.get('highscore')
-
-  if (highScore !== undefined) {
-    $('#highscore').text(highScore);
   }
 
   function clickSquare(element) {
