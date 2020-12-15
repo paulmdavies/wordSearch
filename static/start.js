@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  const AVAILABLE_LETTERS = 500;
   const DIMENSION = 7;
   const GAME_SECONDS = 150;
   const DISTRIBUTION = [9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1]
@@ -60,7 +61,7 @@ $(document).ready(function () {
   columns = [];
   for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
     column = [];
-    for (let rowIndex = 0; rowIndex < DIMENSION; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < AVAILABLE_LETTERS; rowIndex++) {
       column.push(randomLetter());
     }
     columns.push(column);
@@ -142,10 +143,10 @@ $(document).ready(function () {
   function drawGrid(columns) {
     let grid = $('#grid');
     grid.empty();
-    for (var rowIndex = DIMENSION - 1; rowIndex >= 0; rowIndex--) {
+    for (var yIndex = DIMENSION - 1; yIndex >= 0; yIndex--) {
       grid.append('<tr></tr>');
-      for (var columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
-        $('#grid tr:last').append("<td class='gridSquare' id='g" + rowIndex + "#" + columnIndex + "' data-row='" + rowIndex + "' data-column='" + columnIndex + "'>" + columns[columnIndex][rowIndex] + "</td>")
+      for (var xIndex = 0; xIndex < DIMENSION; xIndex++) {
+        $('#grid tr:last').append("<td class='gridSquare' id='g" + yIndex + "#" + xIndex + "' data-y-index='" + yIndex + "' data-x-index='" + xIndex + "'>" + columns[xIndex][yIndex] + "</td>")
       }
     }
     $('.gridSquare').on('mousedown touchstart', press)
@@ -166,10 +167,10 @@ $(document).ready(function () {
       let previousSelectedSquare = selectedSquares.pop();
 
       if (previousSelectedSquare) {
-        let previousRow = previousSelectedSquare.attr('data-row');
-        let previousColumn = previousSelectedSquare.attr('data-column');
-        let row = element.attr('data-row');
-        let column = element.attr('data-column');
+        let previousRow = previousSelectedSquare.attr('data-y-index');
+        let previousColumn = previousSelectedSquare.attr('data-x-index');
+        let row = element.attr('data-y-index');
+        let column = element.attr('data-x-index');
         if (Math.max(Math.abs(previousRow - row), Math.abs(previousColumn - column)) > 1) {
           resetWord();
         }
@@ -231,21 +232,15 @@ $(document).ready(function () {
       let rowIndices = [];
       selectedSquares.forEach(function (selectedSquare) {
         if (selectedSquare !== undefined) {
-          let column = selectedSquare.attr('data-column');
+          let column = selectedSquare.attr('data-x-index');
           if (column == columnIndex) {
-            rowIndices.push(selectedSquare.attr('data-row'))
+            rowIndices.push(selectedSquare.attr('data-y-index'))
           }
         }
       });
-      if (rowIndices.length !== 0) {
-        let reversedRowIndices = rowIndices.sort().reverse();
-        rowIndices.forEach(function (rowIndex) {
-          columns[columnIndex].splice(rowIndex, 1)
-        })
-        for (let i = 0; i < rowIndices.length; i++) {
-          columns[columnIndex].push(randomLetter());
-        }
-      }
+      rowIndices.forEach(function (rowIndex) {
+        columns[columnIndex].splice(rowIndex, 1)
+      })
     }
     drawGrid(columns);
     resetWord();
