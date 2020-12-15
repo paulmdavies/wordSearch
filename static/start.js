@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  const GAME_SECONDS = 150;
+  new Date(GAME_SECONDS);
+  $('#timer').text((GAME_SECONDS / 60 | 0) + ":" + GAME_SECONDS % 60)
+
   let validWords = [];
   fetch("https://raw.githubusercontent.com/marcoagpinto/aoo-mozilla-en-dict/master/en_GB%20(Marco%20Pinto)/en-GB.dic")
     .then(response => response.text())
