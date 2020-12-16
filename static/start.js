@@ -83,6 +83,7 @@ $(document).ready(function () {
   $('#new-game').click(_ => {
     if (window.confirm("Are you sure? You'll not be able to get back to this game.")) {
       Cookies.remove('stored-game');
+      Cookies.remove('game-highscore');
       location.reload();
     }
   })
@@ -91,10 +92,15 @@ $(document).ready(function () {
   var selectedSquares = [];
   var timerStarted = false;
   var currentScore = 0;
-  var highScore = Cookies.get('highscore')
+  var allTimeHighScore = Cookies.get('highscore')
+  var gameHighScore = Cookies.get('game-highscore')
 
-  if (highScore !== undefined) {
-    $('#highscore').text(highScore);
+  if (allTimeHighScore !== undefined) {
+    $('#all-time-highscore').text(allTimeHighScore);
+  }
+
+  if (gameHighScore !== undefined) {
+    $('#highscore').text(gameHighScore);
   }
 
   function randomLetter() {
@@ -134,9 +140,14 @@ $(document).ready(function () {
           if (event.type === 'finish') {
             resetWord();
             $('.gridSquare').off('mousedown mouseup mousemove')
-            if (highScore === undefined || currentScore > parseInt(highScore)) {
-              console.log("New high score: " + parseInt(currentScore))
+            if (gameHighScore === undefined || currentScore > parseInt(gameHighScore)) {
+              console.log("New game high score: " + parseInt(currentScore))
               $('#highscore').text(currentScore);
+              Cookies.set('game-highscore', currentScore)
+            }
+            if (allTimeHighScore === undefined || currentScore > parseInt(allTimeHighScore)) {
+              console.log("New all time high score: " + parseInt(currentScore))
+              $('#all-time-highscore').text(currentScore);
               Cookies.set('highscore', currentScore)
             }
           }
