@@ -108,12 +108,12 @@ $(document).ready(function () {
     return DISTRIBUTION_LETTERS[index]
   }
 
-  function goodMoveEvent(event) {
-    let target = $(event.target);
+  function goodMoveEvent(element, eventPageX, eventPageY) {
+    let target = element;
     let targetLeft = target.offset().left;
     let targetTop = target.offset().top;
-    let eventLeft = event.pageX;
-    let eventTop = event.pageY;
+    let eventLeft = eventPageX;
+    let eventTop = eventPageY;
 
     let targetWidth = target.width();
     let targetHeight = target.height();
@@ -161,10 +161,27 @@ $(document).ready(function () {
 
   function drag(event) {
     let target = $(event.target);
+    console.log(target)
 
     let targetId = target.attr('id');
+
     let previousSquare = selectedSquares[selectedSquares.length - 1];
-    if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(event)) {
+    if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(target, event.pageX, event.pageY)) {
+      clickSquare(target)
+    }
+  }
+
+  function touchDrag(event) {
+    let touches = event.touches;
+    let touch = touches[0];
+
+    let target = $(document.elementFromPoint(touch.pageX, touch.pageY))
+    let targetId = target.attr('id');
+    console.log(targetId);
+    console.log(target);
+
+    let previousSquare = selectedSquares[selectedSquares.length - 1];
+    if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(target, touch.pageX, touch.pageY)) {
       clickSquare(target)
     }
   }
@@ -179,7 +196,8 @@ $(document).ready(function () {
       }
     }
     $('.gridSquare').on('mousedown touchstart', press)
-    $('.gridSquare').on('mousemove touchmove', drag)
+    $('.gridSquare').on('mousemove', drag)
+    $('.gridSquare').on('touchmove', touchDrag)
     $('.gridSquare').on('mouseup touchend', submitWord)
   }
 
