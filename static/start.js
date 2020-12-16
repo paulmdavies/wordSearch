@@ -76,6 +76,17 @@ $(document).ready(function () {
 
   drawGrid(columns);
 
+  $('#restart-game').click(_ => {
+    location.reload();
+  })
+
+  $('#new-game').click(_ => {
+    if (window.confirm("Are you sure? You'll not be able to get back to this game.")) {
+      Cookies.remove('stored-game');
+      location.reload();
+    }
+  })
+
   var word = "";
   var selectedSquares = [];
   var timerStarted = false;
