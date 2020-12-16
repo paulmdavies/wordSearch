@@ -43,7 +43,7 @@ $(document).ready(function () {
   $('#timer').text((GAME_SECONDS / 60 | 0) + ":" + GAME_SECONDS % 60)
 
   let validWords = [];
-  fetch("https://raw.githubusercontent.com/marcoagpinto/aoo-mozilla-en-dict/master/en_GB%20(Marco%20Pinto)/en-GB.dic")
+  fetch("../static/filtered_wordlist.txt")
     .then(response => response.text())
     .then(data => {
       let allWords = data.split("\n");
