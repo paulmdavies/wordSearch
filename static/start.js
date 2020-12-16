@@ -58,13 +58,20 @@ $(document).ready(function () {
       });
     })
 
-  columns = [];
-  for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
-    column = [];
-    for (let rowIndex = 0; rowIndex < AVAILABLE_LETTERS; rowIndex++) {
-      column.push(randomLetter());
+  var columns = [];
+  let storedGame = Cookies.get('stored-game');
+  if (storedGame === undefined) {
+    for (let columnIndex = 0; columnIndex < DIMENSION; columnIndex++) {
+      column = [];
+      for (let rowIndex = 0; rowIndex < AVAILABLE_LETTERS; rowIndex++) {
+        column.push(randomLetter());
+      }
+      columns.push(column);
     }
-    columns.push(column);
+    let columnsString = columns.map(column => column.join('')).join('#');
+    Cookies.set('stored-game', columnsString);
+  } else {
+    columns = storedGame.split('#').map(column => column.split(''));
   }
 
   drawGrid(columns);
