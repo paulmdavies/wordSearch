@@ -2,6 +2,7 @@ $(document).ready(function () {
   const AVAILABLE_LETTERS = 500;
   const DIMENSION = 7;
   const GAME_SECONDS = 150;
+  const EXPIRING_SECONDS = 30;
   const DISTRIBUTION = [9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1]
   const LETTERS = {
     'A': 1,
@@ -137,6 +138,9 @@ $(document).ready(function () {
         new Date().getTime() + (1000 * GAME_SECONDS),
         function (event) {
           $('#timer').text(event.strftime('%M:%S'))
+          if (event.type === 'update' && parseInt(event.strftime('%T')) <= EXPIRING_SECONDS) {
+            $('#timer').addClass('expiring')
+          }
           if (event.type === 'finish') {
             resetWord();
             $('.gridSquare').off('mousedown mouseup mousemove touchstart touchend touchdrag')

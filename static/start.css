@@ -41,3 +41,15 @@ td.gridSquare.clicked {
     text-align: center;
     user-select: none;
 }
+
+div#timer {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: xxx-large;
+    border: 5px black solid;
+    text-align: center;
+}
+
+div#timer.expiring {
+    background-color: red;
+}
