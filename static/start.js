@@ -285,7 +285,7 @@ $(document).ready(function () {
           }
         }
       });
-      rowIndices.forEach(function (rowIndex) {
+      rowIndices.sort().reverse().forEach(function (rowIndex) {
         columns[columnIndex].splice(rowIndex, 1)
       })
     }
