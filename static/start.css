@@ -53,3 +53,14 @@ div#timer {
 div#timer.expiring {
     background-color: red;
 }
+
+button {
+    font-size: x-large;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.centred {
+    display: flex;
+    justify-content: center;
+}
