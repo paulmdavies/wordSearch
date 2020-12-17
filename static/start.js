@@ -40,7 +40,7 @@ $(document).ready(function () {
   }
 
   new Date(GAME_SECONDS);
-  $('#timer').text((GAME_SECONDS / 60 | 0) + ":" + GAME_SECONDS % 60)
+  $('#timer').text((GAME_SECONDS / 60 | 0) + ":" + (GAME_SECONDS % 60).toString().padStart(2, '0'))
 
   let validWords = [];
   fetch("../static/filtered_wordlist.txt")
