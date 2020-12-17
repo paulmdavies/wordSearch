@@ -161,8 +161,6 @@ $(document).ready(function () {
 
   function drag(event) {
     let target = $(event.target);
-    console.log(target)
-
     let targetId = target.attr('id');
 
     let previousSquare = selectedSquares[selectedSquares.length - 1];
@@ -177,8 +175,6 @@ $(document).ready(function () {
 
     let target = $(document.elementFromPoint(touch.pageX, touch.pageY))
     let targetId = target.attr('id');
-    console.log(targetId);
-    console.log(target);
 
     let previousSquare = selectedSquares[selectedSquares.length - 1];
     if (previousSquare !== undefined && targetId !== previousSquare.attr('id') && goodMoveEvent(target, touch.pageX, touch.pageY)) {
