@@ -199,12 +199,13 @@ $(document).ready(function () {
 
   function clickSquare(element) {
     if (element.hasClass('clicked')) {
-      let lastSelectedSquare = selectedSquares.pop();
-      if (element.attr('id') !== lastSelectedSquare.attr('id')) {
+      let removalSquare = selectedSquares.pop();
+      let backtrackSquare = selectedSquares[selectedSquares.length-1];
+      if (element.attr('id') !== backtrackSquare.attr('id')) {
         resetWord()
       } else {
         removeLetterFromWord()
-        element.removeClass('clicked');
+        removalSquare.removeClass('clicked');
       }
     } else {
       let previousSelectedSquare = selectedSquares.pop();
