@@ -139,7 +139,7 @@ $(document).ready(function () {
           $('#timer').text(event.strftime('%M:%S'))
           if (event.type === 'finish') {
             resetWord();
-            $('.gridSquare').off('mousedown mouseup mousemove')
+            $('.gridSquare').off('mousedown mouseup mousemove touchstart touchend touchdrag')
             if (gameHighScore === undefined || currentScore > parseInt(gameHighScore)) {
               console.log("New game high score: " + parseInt(currentScore))
               $('#highscore').text(currentScore);
