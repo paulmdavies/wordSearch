@@ -230,7 +230,7 @@ $(document).ready(function () {
   }
 
   function getWordScore(word) {
-    let multiplier = 1 + ((word.length - 3) * 0.2)
+    let multiplier = word.length - 2
     let score = 0;
 
     for (let letter of word) {
