@@ -70,7 +70,7 @@ $(document).ready(function () {
       columns.push(column);
     }
     let columnsString = columns.map(column => column.join('')).join('#');
-    Cookies.set('stored-game', columnsString);
+    Cookies.set('stored-game', columnsString, { expires: 365 });
   } else {
     columns = storedGame.split('#').map(column => column.split(''));
   }
@@ -147,12 +147,12 @@ $(document).ready(function () {
             if (gameHighScore === undefined || currentScore > parseInt(gameHighScore)) {
               console.log("New game high score: " + parseInt(currentScore))
               $('#highscore').text(currentScore);
-              Cookies.set('game-highscore', currentScore)
+              Cookies.set('game-highscore', currentScore, { expires: 365 })
             }
             if (allTimeHighScore === undefined || currentScore > parseInt(allTimeHighScore)) {
               console.log("New all time high score: " + parseInt(currentScore))
               $('#all-time-highscore').text(currentScore);
-              Cookies.set('highscore', currentScore)
+              Cookies.set('highscore', currentScore, { expires: 365 })
             }
           }
         }
